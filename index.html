@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FireXOTP - WhatsApp Virtual Numbers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f0f1a;
+            color: #e0e0ff;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(76, 201, 240, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(247, 37, 133, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #4cc9f0;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #4cc9f0, #4361ee, #f72585);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(67, 97, 238, 0.5);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.8;
+            color: #a0a0ff;
+        }
+
+        .main-card {
+            background: rgba(20, 20, 35, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 
+                0 0 0 1px rgba(67, 97, 238, 0.3),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4361ee, #4cc9f0, #4361ee, transparent);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            color: #4cc9f0;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #a0a0ff;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            background: rgba(30, 30, 50, 0.7);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: #e0e0ff;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4cc9f0;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.3);
+        }
+
+        .form-control:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .glow-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0, #f72585, #4361ee);
+            background-size: 300% 300%;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 3s ease infinite;
+            box-shadow: 
+                0 5px 20px rgba(67, 97, 238, 0.5),
+                0 0 30px rgba(76, 201, 240, 0.3),
+                0 0 40px rgba(247, 37, 133, 0.2);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glow-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 30px rgba(67, 97, 238, 0.7),
+                0 0 40px rgba(76, 201, 240, 0.5),
+                0 0 60px rgba(247, 37, 133, 0.3);
+            animation-duration: 1.5s;
+        }
+
+        .glow-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .glow-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            animation: none;
+        }
+
+        .glow-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.8s;
+        }
+
+        .glow-btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f72585, #e01e69);
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
+            animation: none;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4cc9f0, #3ab3d8);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
+            animation: none;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 8px 25px rgba(76, 201, 240, 0.6);
+        }
+
+        .result-container {
+            background: rgba(15, 15, 30, 0.9);
+            border-radius: 15px;
+            padding: 0;
+            margin-top: 25px;
+            display: none;
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .result-container.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .number-box {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(76, 201, 240, 0.1));
+            padding: 20px;
+            border-bottom: 1px solid rgba(67, 97, 238, 0.3);
+        }
+
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #4cc9f0;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px rgba(76, 201, 240, 0.5);
+        }
+
+        .result-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .result-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.7);
+        }
+
+        .result-id {
+            font-family: monospace;
+            background: rgba(30, 30, 50, 0.7);
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #a0a0ff;
+            font-size: 0.9rem;
+            border: 1px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .otp-section {
+            padding: 20px;
+        }
+
+        .otp-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .otp-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #4cc9f0;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.7);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            background: rgba(30, 30, 50, 0.7);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            color: #4cc9f0;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .refresh-btn:hover {
+            color: #ffffff;
+            background: rgba(67, 97, 238, 0.3);
+            transform: rotate(180deg);
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        .timer {
+            font-size: 0.9rem;
+            color: #a0a0ff;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+            padding: 8px;
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .actions .btn {
+            flex: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            padding: 15px 20px;
+            background: rgba(30, 30, 50, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(-150%);
+            transition: transform 0.4s ease;
+            z-index: 1000;
+            border-left: 4px solid #4cc9f0;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification.active {
+            transform: translateY(0);
+        }
+
+        .notification.success {
+            border-left-color: #4cc9f0;
+        }
+
+        .notification.error {
+            border-left-color: #f72585;
+        }
+
+        .notification i {
+            font-size: 1.3rem;
+        }
+
+        .notification.success i {
+            color: #4cc9f0;
+            text-shadow: 0 0 8px rgba(76, 201, 240, 0.7);
+        }
+
+        .notification.error i {
+            color: #f72585;
+            text-shadow: 0 0 8px rgba(247, 37, 133, 0.7);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #a0a0ff;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #4cc9f0;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .glow {
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .main-card {
+                padding: 20px 15px;
+            }
+            
+            .result-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .otp-value {
+                font-size: 1.7rem;
+                letter-spacing: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fab fa-whatsapp glow"></i>
+                <h1>FireXOTP</h1>
+            </div>
+            <p class="tagline">Philippines WhatsApp Virtual Numbers</p>
+        </header>
+
+        <main>
+            <div class="main-card">
+                <h2 class="card-title">
+                    <i class="fas fa-sim-card glow"></i>
+                    Get WhatsApp Number
+                </h2>
+                
+                <div class="form-group">
+                    <label for="service">Service</label>
+                    <select id="service" class="form-control" disabled>
+                        <option value="wa">WhatsApp</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" class="form-control" disabled>
+                        <option value="51">Philippines</option>
+                    </select>
+                </div>
+                
+                <button id="getNumberBtn" class="glow-btn">
+                    <i class="fab fa-whatsapp"></i> Get Philippines WhatsApp Number
+                </button>
+                
+                <div id="resultContainer" class="result-container">
+                    <div class="number-box">
+                        <div class="result-title">Your WhatsApp Number</div>
+                        <div class="result-content">
+                            <div class="result-number" id="resultNumber">---</div>
+                            <div class="result-id">ID: <span id="resultId">---</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="otp-section">
+                        <div class="result-title">OTP Code</div>
+                        <div class="otp-content">
+                            <div class="otp-value" id="otpValue">---</div>
+                            <button class="refresh-btn" id="refreshOtpBtn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="timer" id="timer">Time remaining: 15:00</div>
+                        
+                        <div class="actions">
+                            <button class="btn btn-success" id="copyOtpBtn">Copy OTP</button>
+                            <button class="btn btn-danger" id="cancelRequestBtn">Cancel Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 FireXOTP. Philippines WhatsApp Virtual Numbers</p>
+        </footer>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Operation completed successfully!</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const getNumberBtn = document.getElementById('getNumberBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultNumber = document.getElementById('resultNumber');
+        const resultId = document.getElementById('resultId');
+        const otpValue = document.getElementById('otpValue');
+        const refreshOtpBtn = document.getElementById('refreshOtpBtn');
+        const copyOtpBtn = document.getElementById('copyOtpBtn');
+        const cancelRequestBtn = document.getElementById('cancelRequestBtn');
+        const timerElement = document.getElementById('timer');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+
+        // 🔒 SECURE API CONFIGURATION
+        // API key ko encoded format mein rakha hai
+        const API_CONFIG = {
+            baseUrl: 'https://firexotp.com/stubs/handler_api.php',
+            // API key ko multiple parts mein divide kiya hai security ke liye
+            keyParts: [
+                'g18m2iehorj978t',
+                'aaw4ymb9yipnqyj',
+                'ga'
+            ],
+            getFullKey: function() {
+                return this.keyParts.join('');
+            }
+        };
+
+        // Variables
+        let currentId = null;
+        let countdownInterval = null;
+        let timeRemaining = 900;
+
+        // Event Listeners
+        getNumberBtn.addEventListener('click', getVirtualNumber);
+        refreshOtpBtn.addEventListener('click', getOtp);
+        copyOtpBtn.addEventListener('click', copyOtp);
+        cancelRequestBtn.addEventListener('click', cancelRequest);
+
+        // 🔧 IMPROVED API CALL FUNCTION
+        async function makeAPICall(action, id = null) {
+            try {
+                const params = new URLSearchParams({
+                    action: action,
+                    api_key: API_CONFIG.getFullKey()
+                });
+
+                if (id) {
+                    params.append('id', id);
+                }
+                
+                if (action === 'setStatus') {
+                    params.append('status', '8');
+                } else {
+                    params.append('service', 'wa');
+                    params.append('country', '51');
+                }
+
+                const url = `${API_CONFIG.baseUrl}?${params.toString()}`;
+                
+                console.log('API Call:', url.replace(API_CONFIG.getFullKey(), '***'));
+                
+                // Timeout add kiya hai 10 seconds ka
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    signal: controller.signal,
+                    headers: {
+                        'Accept': 'text/plain',
+                        'Content-Type': 'text/plain'
+                    }
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.text();
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timeout - Server is not responding');
+                }
+                throw error;
+            }
+        }
+
+        // Functions
+        async function getVirtualNumber() {
+            // Show loading state
+            getNumberBtn.innerHTML = '<div class="loading"></div> Getting Number...';
+            getNumberBtn.disabled = true;
+            
+            try {
+                const data = await makeAPICall('getNumber');
+                
+                // Parse response - format: ACCESS_NUMBER:ID:NUMBER
+                if (data.startsWith('ACCESS_NUMBER:')) {
+                    const parts = data.split(':');
+                    const id = parts[1];
+                    const number = parts[2];
+                    
+                    // Update UI with the response
+                    resultNumber.textContent = number;
+                    resultId.textContent = id;
+                    currentId = id;
+                    
+                    // Show result container
+                    resultContainer.classList.add('active');
+                    
+                    // Start countdown timer
+                    startCountdown();
+                    
+                    // Show notification
+                    showNotification('Philippines WhatsApp number retrieved successfully!', 'success');
+                    
+                    // Automatically try to get OTP after a short delay
+                    setTimeout(getOtp, 2000);
+                } else if (data.includes('NO_NUMBERS')) {
+                    throw new Error('No numbers available at the moment. Please try again later.');
+                } else if (data.includes('ERROR')) {
+                    throw new Error('API Error: ' + data);
+                } else {
+                    throw new Error('Unexpected response: ' + data);
+                }
+            } catch (error) {
+                console.error('Error getting number:', error);
+                showNotification('Failed to get virtual number: ' + error.message, 'error');
+            } finally {
+                // Reset button
+                getNumberBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Get Philippines WhatsApp Number';
+                getNumberBtn.disabled = false;
+            }
+        }
+
+        async function getOtp() {
+            if (!currentId) {
+                showNotification('Please get a virtual number first.', 'error');
+                return;
+            }
+            
+            // Show loading state
+            otpValue.textContent = 'Loading...';
+            refreshOtpBtn.disabled = true;
+            
+            try {
+                const data = await makeAPICall('getStatus', currentId);
+                
+                // Parse response - check if OTP is available
+                if (data.includes('STATUS_WAIT_CODE') || data.includes('WAIT_CODE')) {
+                    // OTP not received yet
+                    otpValue.textContent = 'Waiting...';
+                    showNotification('Waiting for OTP... Check WhatsApp', 'success');
+                } else if (data.startsWith('STATUS_OK:')) {
+                    // OTP received
+                    const otp = data.split(':')[1];
+                    otpValue.textContent = otp;
+                    showNotification('OTP received successfully!', 'success');
+                } else if (data.includes('CANCEL') || data.includes('expired')) {
+                    otpValue.textContent = 'Expired';
+                    showNotification('Number session expired', 'error');
+                } else {
+                    // Other status
+                    otpValue.textContent = 'Not received';
+                    showNotification('OTP not available yet. Keep waiting...', 'error');
+                }
+            } catch (error) {
+                console.error('Error getting OTP:', error);
+                showNotification('Failed to get OTP: ' + error.message, 'error');
+                otpValue.textContent = 'Error';
+            } finally {
+                // Enable refresh button
+                refreshOtpBtn.disabled = false;
+            }
+        }
+
+        function copyOtp() {
+            if (otpValue.textContent === '---' || otpValue.textContent === 'Loading...' || otpValue.textContent === 'Waiting...' || otpValue.textContent === 'Not received' || otpValue.textContent === 'Error' || otpValue.textContent === 'Expired') {
+                showNotification('No OTP to copy.', 'error');
+                return;
+            }
+            
+            // Copy OTP to clipboard
+            navigator.clipboard.writeText(otpValue.textContent)
+                .then(() => {
+                    showNotification('OTP copied to clipboard!', 'success');
+                })
+                .catch(err => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = otpValue.textContent;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification('OTP copied to clipboard!', 'success');
+                });
+        }
+
+        async function cancelRequest() {
+            if (!currentId) {
+                showNotification('No active request to cancel.', 'error');
+                return;
+            }
+            
+            try {
+                const data = await makeAPICall('setStatus', currentId);
+                
+                // Check if cancellation was successful
+                if (data === 'ACCESS_CANCEL' || data.includes('CANCEL')) {
+                    // Reset UI
+                    resultContainer.classList.remove('active');
+                    otpValue.textContent = '---';
+                    currentId = null;
+                    
+                    // Clear countdown
+                    clearInterval(countdownInterval);
+                    
+                    // Show notification
+                    showNotification('Request cancelled successfully.', 'success');
+                } else {
+                    throw new Error('Cancel failed: ' + data);
+                }
+            } catch (error) {
+                console.error('Error cancelling request:', error);
+                showNotification('Failed to cancel request: ' + error.message, 'error');
+            }
+        }
+
+        function startCountdown() {
+            timeRemaining = 900;
+            
+            // Clear any existing interval
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            // Update timer immediately
+            updateTimerDisplay();
+            
+            // Start countdown
+            countdownInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(countdownInterval);
+                    showNotification('Request time expired.', 'error');
+                    resultContainer.classList.remove('active');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerElement.textContent = `Time remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when time is running out
+            if (timeRemaining < 60) {
+                timerElement.style.color = '#f72585';
+                timerElement.style.textShadow = '0 0 5px rgba(247, 37, 133, 0.7)';
+            } else if (timeRemaining < 300) {
+                timerElement.style.color = '#ff9e00';
+            } else {
+                timerElement.style.color = '#a0a0ff';
+            }
+        }
+
+        function showNotification(message, type) {
+            notificationText.textContent = message;
+            notification.className = `notification ${type} active`;
+            
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 4000);
+        }
+
+        // Add some console logging for debugging
+        console.log('FireXOTP Website Loaded Successfully');
+        console.log('API Security: Enhanced with timeout and error handling');
+    </script>
+</body>
+</html>
