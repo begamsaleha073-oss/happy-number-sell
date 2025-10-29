@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, send_from_directory, request
 import requests
 import os
-import json
 
 app = Flask(__name__)
 
@@ -122,15 +121,18 @@ def cancel_number():
             'error': f'API call failed: {str(e)}'
         })
 
-# Serve frontend
-@app.route('/')
-def serve_frontend():
-    return send_from_directory('public', 'index.html')
+# Serve frontend - yeh important hai
+@app.route('/', methods=['GET'])
+def serve_index():
+    return send_from_directory('.', 'index.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory('public', path)
+    return send_from_directory('.', path)
 
-# Vercel ke liye
+# Vercel ke liye specific handler
+def handler(request, context):
+    return app(request, context)
+
 if __name__ == '__main__':
     app.run(debug=True)
