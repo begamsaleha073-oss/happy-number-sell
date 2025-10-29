@@ -3,24 +3,33 @@ const axios = require('axios');
 const cors = require('cors');
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS properly configure karein
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
+
 app.use(express.json());
 app.use(express.static('public'));
 
-// Your API Key - Vercel environment variable se milega
+// API Key
 const API_KEY = process.env.FIREX_API_KEY || 'g18m2iehorj978taaw4ymb9yipnqyjga';
 const BASE_URL = 'https://firexotp.com/stubs/handler_api.php';
 
 // Get Number API
 app.get('/api/getNumber', async (req, res) => {
     try {
-        console.log('Getting Philippines WhatsApp number...');
-        const response = await axios.get(`${BASE_URL}?action=getNumber&api_key=${API_KEY}&service=wa&country=51`);
+        console.log('Calling FirexOTP API...');
+        const apiUrl = `${BASE_URL}?action=getNumber&api_key=${API_KEY}&service=wa&country=51`;
+        console.log('API URL:', apiUrl);
         
-        console.log('API Response:', response.data);
+        const response = await axios.get(apiUrl, {
+            timeout: 10000
+        });
         
-        // Parse response: ACCESS_NUMBER:ID:NUMBER
+        console.log('Raw API Response:', response.data);
+        
         const parts = response.data.split(':');
         if (parts[0] === 'ACCESS_NUMBER' && parts.length === 3) {
             res.json({
@@ -35,10 +44,10 @@ app.get('/api/getNumber', async (req, res) => {
             });
         }
     } catch (error) {
-        console.error('Get Number Error:', error);
-        res.json({
+        console.error('Get Number Error:', error.message);
+        res.status(500).json({
             success: false,
-            error: 'API call failed'
+            error: 'API call failed: ' + error.message
         });
     }
 });
@@ -47,20 +56,26 @@ app.get('/api/getNumber', async (req, res) => {
 app.get('/api/getOtp', async (req, res) => {
     try {
         const { id } = req.query;
-        console.log('Getting OTP for ID:', id);
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                error: 'ID parameter is required'
+            });
+        }
         
-        const response = await axios.get(`${BASE_URL}?action=getStatus&api_key=${API_KEY}&id=${id}`);
+        const response = await axios.get(`${BASE_URL}?action=getStatus&api_key=${API_KEY}&id=${id}`, {
+            timeout: 10000
+        });
         
-        console.log('OTP Response:', response.data);
         res.json({
             success: true,
             data: response.data
         });
     } catch (error) {
-        console.error('Get OTP Error:', error);
-        res.json({
+        console.error('Get OTP Error:', error.message);
+        res.status(500).json({
             success: false,
-            error: 'API call failed'
+            error: 'API call failed: ' + error.message
         });
     }
 });
@@ -69,22 +84,37 @@ app.get('/api/getOtp', async (req, res) => {
 app.get('/api/cancelNumber', async (req, res) => {
     try {
         const { id } = req.query;
-        console.log('Cancelling number with ID:', id);
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                error: 'ID parameter is required'
+            });
+        }
         
-        const response = await axios.get(`${BASE_URL}?action=setStatus&api_key=${API_KEY}&id=${id}&status=8`);
+        const response = await axios.get(`${BASE_URL}?action=setStatus&api_key=${API_KEY}&id=${id}&status=8`, {
+            timeout: 10000
+        });
         
-        console.log('Cancel Response:', response.data);
         res.json({
             success: true,
             data: response.data
         });
     } catch (error) {
-        console.error('Cancel Number Error:', error);
-        res.json({
+        console.error('Cancel Number Error:', error.message);
+        res.status(500).json({
             success: false,
-            error: 'API call failed'
+            error: 'API call failed: ' + error.message
         });
     }
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        message: 'Server is running',
+        timestamp: new Date().toISOString()
+    });
 });
 
 // Serve frontend
