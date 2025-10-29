@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FirexOTP</title>
+    <style>
+        body { font-family: Arial; background: #1a1a2e; color: white; padding: 20px; }
+        .btn { background: #4361ee; color: white; padding: 15px; border: none; margin: 10px 0; width: 100%; cursor: pointer; }
+        .result { background: rgba(255,255,255,0.1); padding: 15px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔥 FirexOTP</h1>
+    <p>Philippines WhatsApp Numbers</p>
+
+    <button class="btn" onclick="testHealth()">Test Health</button>
+    <button class="btn" onclick="getNumber()">Get Number</button>
+    
+    <div id="results"></div>
+
+    <script>
+        async function testHealth() {
+            try {
+                const response = await fetch('/api?path=health');
+                const data = await response.json();
+                showResult('Health:', data);
+            } catch (error) {
+                showResult('Error:', error.message);
+            }
+        }
+
+        async function getNumber() {
+            try {
+                const response = await fetch('/api?path=getNumber');
+                const data = await response.json();
+                showResult('Get Number:', data);
+            } catch (error) {
+                showResult('Error:', error.message);
+            }
+        }
+
+        function showResult(title, data) {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="result">
+                    <h3>${title}</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        // Auto test
+        testHealth();
+    </script>
+</body>
+</html>
