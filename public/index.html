@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FirexOTP - Philippines WhatsApp Numbers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root { --primary: #4361ee; --secondary: #3a0ca3; --accent: #7209b7; --light: #f8f9fa; --dark: #212529; --success: #4cc9f0; --danger: #f72585; --warning: #f8961e; }
+        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: var(--light); min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; padding: 30px 0; margin-bottom: 30px; }
+        .logo { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; }
+        .logo i { font-size: 2.5rem; color: var(--primary); }
+        .logo h1 { font-size: 2.5rem; background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+        .service-badge { display: inline-block; background: linear-gradient(to right, var(--success), #3a86ff); padding: 8px 20px; border-radius: 20px; font-weight: 600; margin-top: 10px; }
+        .card { background: rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 30px; }
+        .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .card-header i { font-size: 1.8rem; color: var(--primary); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 24px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-top: 10px; }
+        .btn-primary { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; }
+        .btn-success { background: linear-gradient(to right, var(--success), #3a86ff); color: white; }
+        .btn-danger { background: linear-gradient(to right, var(--danger), #b5179e); color: white; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .result-area { margin-top: 25px; padding: 20px; border-radius: 10px; background: rgba(0, 0, 0, 0.3); display: none; }
+        .result-area.active { display: block; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .result-label { font-weight: 600; color: #cbd5e1; }
+        .result-value { font-weight: 500; color: white; word-break: break-all; text-align: right; }
+        .timer { font-size: 1.5rem; font-weight: 700; text-align: center; margin: 20px 0; color: var(--warning); }
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .status-message { padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 500; display: none; }
+        .status-success { background: rgba(76, 201, 240, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .status-error { background: rgba(247, 37, 133, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .status-info { background: rgba(67, 97, 238, 0.2); color: var(--info); border: 1px solid var(--info); }
+        .loader { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .api-status { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; font-size: 0.9rem; }
+        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+        .status-indicator.offline { background: var(--danger); }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-sim-card"></i>
+                <h1>FirexOTP</h1>
+            </div>
+            <p style="color: #a5b4fc; margin-bottom: 10px;">Philippines WhatsApp Virtual Numbers</p>
+            <div class="service-badge">
+                <i class="fab fa-whatsapp"></i> WhatsApp Verification
+            </div>
+            <div class="api-status">
+                <div class="status-indicator" id="statusIndicator"></div>
+                <span id="statusText">Checking server status...</span>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-mobile-alt"></i>
+                <h2>Get Philippines WhatsApp Number</h2>
+            </div>
+            
+            <div id="statusMessage" class="status-message"></div>
+            
+            <button id="getNumberBtn" class="btn btn-primary">
+                <i class="fas fa-sim-card"></i> Get Philippines WhatsApp Number
+            </button>
+            
+            <div id="numberResult" class="result-area">
+                <div class="result-item">
+                    <span class="result-label">Request ID:</span>
+                    <span id="numberId" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Phone Number:</span>
+                    <span id="phoneNumber" class="result-value">-</span>
+                </div>
+                
+                <div class="timer">
+                    Time Left: <span id="countdown">15</span>s
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="refreshOtpBtn" class="btn btn-success">
+                        <i class="fas fa-sync-alt"></i> Refresh OTP
+                    </button>
+                    <button id="cancelNumberBtn" class="btn btn-danger">
+                        <i class="fas fa-times-circle"></i> Cancel
+                    </button>
+                </div>
+            </div>
+            
+            <div id="otpResult" class="result-area">
+                <div class="result-item">
+                    <span class="result-label">OTP Code:</span>
+                    <span id="otpCode" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span id="otpStatus" class="result-value">Waiting for OTP...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ✅ CORRECT API URLs - .js extension nahi hoga
+        const API_URLS = {
+            health: '/api/health',
+            getNumber: '/api/getNumber', 
+            getOtp: '/api/getOtp',
+            cancelNumber: '/api/cancelNumber'
+        };
+
+        let currentId = null;
+        let countdownTimer = null;
+        let timeLeft = 15;
+
+        // Check server status on load
+        async function checkServerStatus() {
+            try {
+                console.log('Checking server health...');
+                const response = await fetch(API_URLS.health);
+                const data = await response.json();
+                console.log('Health response:', data);
+                
+                if (data.status === 'OK') {
+                    document.getElementById('statusIndicator').style.background = '#4cc9f0';
+                    document.getElementById('statusText').textContent = 'Server is online';
+                    document.getElementById('statusText').style.color = '#4cc9f0';
+                    showStatus('Server connected successfully!', 'success');
+                }
+            } catch (error) {
+                console.error('Health check failed:', error);
+                document.getElementById('statusIndicator').style.background = '#f72585';
+                document.getElementById('statusText').textContent = 'Server is offline';
+                document.getElementById('statusText').style.color = '#f72585';
+                showStatus('Server connection failed!', 'error');
+            }
+        }
+
+        // Get Number
+        document.getElementById('getNumberBtn').addEventListener('click', async function() {
+            this.innerHTML = '<div class="loader"></div> Getting Number...';
+            this.disabled = true;
+            
+            try {
+                console.log('Calling getNumber API...');
+                const response = await fetch(API_URLS.getNumber);
+                const data = await response.json();
+                console.log('GetNumber response:', data);
+                
+                if (data.success) {
+                    document.getElementById('numberId').textContent = data.id;
+                    document.getElementById('phoneNumber').textContent = data.number;
+                    document.getElementById('numberResult').classList.add('active');
+                    document.getElementById('otpResult').classList.add('active');
+                    
+                    currentId = data.id;
+                    startCountdown();
+                    showStatus('Philippines WhatsApp number obtained successfully!', 'success');
+                } else {
+                    showStatus('Error: ' + (data.error || 'Failed to get number'), 'error');
+                }
+            } catch (error) {
+                console.error('GetNumber error:', error);
+                showStatus('Network error: ' + error.message, 'error');
+            } finally {
+                this.innerHTML = '<i class="fas fa-sim-card"></i> Get Philippines WhatsApp Number';
+                this.disabled = false;
+            }
+        });
+
+        // Get OTP
+        document.getElementById('refreshOtpBtn').addEventListener('click', async function() {
+            if (!currentId) {
+                showStatus('Please get a number first', 'error');
+                return;
+            }
+
+            this.innerHTML = '<div class="loader"></div> Checking...';
+            this.disabled = true;
+            
+            try {
+                console.log('Calling getOtp API with ID:', currentId);
+                const response = await fetch(`${API_URLS.getOtp}?id=${currentId}`);
+                const data = await response.json();
+                console.log('GetOtp response:', data);
+                
+                if (data.success) {
+                    document.getElementById('otpStatus').textContent = 'OTP Checked';
+                    
+                    if (data.data && data.data.includes('CODE')) {
+                        const otpCode = data.data.split(':')[1];
+                        document.getElementById('otpCode').textContent = otpCode;
+                        document.getElementById('otpStatus').textContent = 'OTP Received!';
+                        showStatus('OTP received successfully!', 'success');
+                        
+                        // Stop the countdown timer
+                        if (countdownTimer) {
+                            clearInterval(countdownTimer);
+                            document.getElementById('countdown').textContent = '0';
+                        }
+                    } else {
+                        showStatus('No OTP received yet. Please wait...', 'info');
+                    }
+                } else {
+                    showStatus('Error: ' + (data.error || 'Failed to check OTP'), 'error');
+                }
+            } catch (error) {
+                console.error('GetOtp error:', error);
+                showStatus('Network error: ' + error.message, 'error');
+            } finally {
+                this.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh OTP';
+                this.disabled = false;
+            }
+        });
+
+        // Cancel Number
+        document.getElementById('cancelNumberBtn').addEventListener('click', async function() {
+            if (!currentId) {
+                showStatus('No active number to cancel', 'error');
+                return;
+            }
+
+            this.innerHTML = '<div class="loader"></div> Cancelling...';
+            this.disabled = true;
+            
+            try {
+                console.log('Calling cancelNumber API with ID:', currentId);
+                const response = await fetch(`${API_URLS.cancelNumber}?id=${currentId}`);
+                const data = await response.json();
+                console.log('CancelNumber response:', data);
+                
+                // Reset UI whether successful or not
+                document.getElementById('numberResult').classList.remove('active');
+                document.getElementById('otpResult').classList.remove('active');
+                document.getElementById('numberId').textContent = '-';
+                document.getElementById('phoneNumber').textContent = '-';
+                document.getElementById('otpCode').textContent = '-';
+                document.getElementById('otpStatus').textContent = 'Waiting for OTP...';
+                
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                }
+                
+                currentId = null;
+                showStatus('Number cancelled successfully', 'success');
+            } catch (error) {
+                console.error('CancelNumber error:', error);
+                showStatus('Network error: ' + error.message, 'error');
+            } finally {
+                this.innerHTML = '<i class="fas fa-times-circle"></i> Cancel';
+                this.disabled = false;
+            }
+        });
+
+        function startCountdown() {
+            timeLeft = 15;
+            document.getElementById('countdown').textContent = timeLeft;
+            
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdown').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    // Automatically cancel when time expires
+                    document.getElementById('cancelNumberBtn').click();
+                    showStatus('Time expired! Number automatically cancelled.', 'info');
+                }
+            }, 1000);
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status-message status-' + type;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            checkServerStatus();
+            console.log('Website loaded successfully');
+        });
+    </script>
+</body>
+</html>
