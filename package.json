@@ -1,10 +1,6 @@
 {
-  "name": "firexotp-nodejs",
-  "version": "1.0.0",
-  "description": "Virtual Number Service for Philippines WhatsApp",
-  "scripts": {
-    "dev": "vercel dev"
-  },
+  "name": "firexotp-new",
+  "version": "1.0.0", 
   "dependencies": {
     "axios": "^1.5.0"
   }
