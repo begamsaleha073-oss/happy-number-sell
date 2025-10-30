@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Access Blocked - Mahan Bhaiya</title>
+            <title>Access Blocked - Mahan Bhai</title>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
                 
@@ -341,7 +341,7 @@ module.exports = async (req, res) => {
                 </a>
                 
                 <div class="warning">
-                    ⚠️ Warna Happy Bhaiya naaraaz ho jayega!
+                    ⚠️ Warna Happy bhai naaraaz ho jayega!
                 </div>
             </div>
             
